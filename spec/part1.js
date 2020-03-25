@@ -505,7 +505,7 @@
           return memo * item;
         }, 0);
 
-        expect(result).to.equal(6);
+        expect(result).to.equal(0);
       });
 
       it('should set memo to be the first item of the array if no memo is passed in', function() {
