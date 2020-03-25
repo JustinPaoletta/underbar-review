@@ -7,7 +7,7 @@
   // seem very useful, but remember it--if a function needs to provide an
   // iterator when the user does not pass one in, this will be handy.
   _.identity = function(val) {
-    return val
+    return val;
   };
 
   /**
@@ -40,12 +40,12 @@
   _.last = function(array, n) {
     if (n === 0) {
       return [];
-    };
+    }
     if (n === undefined) {
-      return array[array.length-1];
-    }else{
+      return array[array.length - 1];
+    } else {
       return array.slice(-n);
-    };
+    }
   };
 
   // Call iterator(value, key, collection) for each element of collection.
@@ -57,12 +57,12 @@
     if (Array.isArray(collection)) {
       //iterate
       for (var i = 0; i < collection.length; i++) {
-        iterator(collection[i], i, collection)
+        iterator(collection[i], i, collection);
       }
     } else {
       //iterate
       for (var key in collection) {
-        iterator(collection[key], key, collection)
+        iterator(collection[key], key, collection);
       }
     }
   };
@@ -89,7 +89,7 @@
     let truth = [];
 
     for (let i = 0; i < collection.length; i++) {
-      if(test(collection[i])){
+      if (test(collection[i])) {
         truth.push(collection[i]);
       }
     }
@@ -103,11 +103,11 @@
     // copying code in and modifying it
     let notTrue = [];
     for (let i = 0; i < collection.length; i++) {
-      if(!test(collection[i])){
+      if (!test(collection[i])) {
         notTrue.push(collection[i]);
       }
     }
-    return notTrue
+    return notTrue;
   };
 
   // Produce a duplicate-free version of the array.
@@ -117,44 +117,45 @@
 
     let tracker = {};
 
-    if(!isSorted){
-        array.sort((a,b) => { return a - b });
+    if (!isSorted) {
+      array.sort((a, b) => { return a - b; });
     }
 
-    if(iterator === undefined) {
+    if (iterator === undefined) {
 
-        _.each(array, function(value){
-            if(!unique.includes(value)){
-                unique.push(value);
-            }
-        })
+      _.each(array, function(value) {
+        if (!unique.includes(value)) {
+          unique.push(value);
+        }
+      });
     }
 
-    if(iterator){
+    if (iterator) {
 
-        _.each(array, function(value){
-            let itVal = iterator(value);
-            if (!tracker[itVal]) {
-                tracker[itVal] = value;
-            }
-        })
+      _.each(array, function(value) {
+        let itVal = iterator(value);
 
-        return Object.values(tracker);
+        if (!tracker[itVal]) {
+          tracker[itVal] = value;
+        }
+      });
+
+      return Object.values(tracker);
     }
 
     return unique;
 
-};
+  };
   // _.uniq([1, 2, 1, 3, 1, 4] , true , function(val){ val === 1});
 
   // Return the results of applying an iterator to each element.
   _.map = function(collection, iterator) {
-      var accumulator = [];
-    _.each(collection, function(val){
-      accumulator.push(iterator(val))
+    var accumulator = [];
+    _.each(collection, function(val) {
+      accumulator.push(iterator(val));
+    });
 
-    })
-    return accumulator
+    return accumulator;
 
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
@@ -201,26 +202,36 @@
   //          No accumulator is given so the first element is used.
 
   _.reduce = function(collection, iterator, accumulator) {
-    debugger;
-    if (Array.isArray(collection)) {
-    for(var i = 0; i < collection.length; i++){
-      if(accumulator === undefined){
-        accumulator = collection[0];
-        i = 1;
-      }//if
-    accumulator = iterator(accumulator, collection[i], i, collection);
-      }//for
-    } else {
-      for(var key in collection){
-        if(accumulator === undefined){
-        accumulator = collection[0];
-        }//if
-      accumulator = iterator(accumulator, collection[key], key, collection);
-      }//for in
-    }//else
-    return accumulator;
-  };//function
 
+    if (accumulator === undefined) {
+      accumulator = collection[0];
+      collection = collection.slice(1);
+    }
+
+    _.each(collection, (item) => {
+      accumulator = iterator(accumulator, item);
+    });
+
+    return accumulator;
+
+    // if (Array.isArray(collection)) {
+    //   for (var i = 0; i < collection.length; i++) {
+    //     if (accumulator === undefined) {
+    //       accumulator = collection[0];
+    //       i = 1;
+    //     }
+    //     accumulator = iterator(accumulator, collection[i], i, collection);
+    //   }
+    // } else {
+    //   for (var key in collection) {
+    //     if (accumulator === undefined) {
+    //       accumulator = collection[0];
+    //     }
+    //     accumulator = iterator(accumulator, collection[key], key, collection);
+    //   }
+    // }
+    // return accumulator;
+  };
 
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
