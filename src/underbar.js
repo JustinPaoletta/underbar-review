@@ -111,34 +111,51 @@
   };
 
   // Produce a duplicate-free version of the array.
-  _.uniq = function(array, isSorted, iterator) {
+  _.uniq = function (array, isSorted, iterator) {
+
+    let unique = [];
 
     let tracker = {};
 
-    if(isSorted){
-      if(iterator){
-        array.forEach((item) => {
-          if (tracker[iterator(item)]) {
-            tracker[iterator(item)] = item;
-          }
-        })
-        console.log(tracker);
-        return Object.values(tracker);
-      }else{
-
-      }
-    }else{
-      if(iterator){
-
-      }else{
-
-      }
+    if(!isSorted){
+        array.sort((a,b) => { return a - b });
     }
-  };
-  _.uniq([1, 2, 1, 3, 1, 4] , true , function(val){ val === 1});
+
+    if(iterator === undefined) {
+
+        _.each(array, function(value){
+            if(!unique.includes(value)){
+                unique.push(value);
+            }
+        })
+    }
+
+    if(iterator){
+
+        _.each(array, function(value){
+            let itVal = iterator(value);
+            if (!tracker[itVal]) {
+                tracker[itVal] = value;
+            }
+        })
+
+        return Object.values(tracker);
+    }
+
+    return unique;
+
+};
+  // _.uniq([1, 2, 1, 3, 1, 4] , true , function(val){ val === 1});
 
   // Return the results of applying an iterator to each element.
   _.map = function(collection, iterator) {
+      var accumulator = [];
+    _.each(collection, function(val){
+      accumulator.push(iterator(val))
+
+    })
+    return accumulator
+
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
@@ -183,6 +200,15 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
+    if (!accumulator) {
+      accumulator = collection[0]
+      collection = collection.slice(1)
+    }
+    for (var i = 0; i < collection.length; i++) {
+      accumulator = iterator(accumulator, collection[i]);
+    }
+
+    return accumulator
   };
 
   // Determine if the array or object contains a given value (using `===`).
@@ -190,6 +216,7 @@
     // TIP: Many iteration problems can be most easily expressed in
     // terms of reduce(). Here's a freebie to demonstrate!
     return _.reduce(collection, function(wasFound, item) {
+      // debugger;
       if (wasFound) {
         return true;
       }
